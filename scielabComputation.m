@@ -1,10 +1,10 @@
 %% Computation of S-CIELAB Values given an input image
 clear all
 close all
-%% read in image
-blur = 'lpf'; % 'gauss' or 'lpf'
 
-%img = imread('butterfly.jpeg');
+%% read in image
+blur = 'gauss'; % 'gauss' or 'lpf' % LPF doesn't work yet. WIP
+
 img = createSpoke([1, 1, 0], [0, 0, 1], 25, 256);
 
 if strcmp(blur, 'gauss')

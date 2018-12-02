@@ -1,5 +1,5 @@
 function image = createSpoke(color1, color2, numRays, targetSize)
-%% function creates a spoke target
+% function creates a spoke target
 
 image = zeros(targetSize, targetSize, 3);
 c = targetSize / 2 + 0.5;
