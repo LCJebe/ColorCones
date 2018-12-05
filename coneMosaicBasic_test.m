@@ -29,7 +29,7 @@ s = sceneSet(s, 'fov', 2);
 disp('Setting up Scene...');
 % create spoke
 col1 = [1, 1, 0];
-col2 = [0, 0, 1];
+col2 = [1, 0.7, 0.3];
 spoke_size = 512;
 spoke = createSpoke(col1, col2, 10, spoke_size);
 
@@ -58,7 +58,7 @@ cMosaic.setSizeToFOV(val * sceneGet(s, 'fov'));
 %disp(sceneGet(s,'fov'));
 
 %% Set integration time 
-% cMosaic.integrationTime = 0.01;
+cMosaic.integrationTime = 0.2;
 
 %% Generate a sequence of 100 eye posistions.
 % cMosaic.emGenSequence(100);
@@ -114,11 +114,13 @@ subplot(2, 2, 2);
 imshow(imd);
 xlabel('Recons.');
 subplot(2, 2, 3);
-imshow(dE_LAB, [min(dE_LAB(:)), max(dE_LAB(:))]);
+imshow(dE_LAB, [0, max(dE_LAB(:))]);
 xlabel(['Delta E. LAB.', 'Max: ', num2str(max(dE_LAB(:)))]);
+colorbar
 subplot(2, 2, 4);
-imshow(dE_SLAB, [min(dE_SLAB(:)), max(dE_SLAB(:))]);
+imshow(dE_SLAB, [0, max(dE_SLAB(:))]);
 xlabel(['Delta E. S-LAB.', 'Max: ', num2str(max(dE_SLAB(:)))]);
+colorbar
 
 
 % [de00, errComponents] = deltaE2000(original_LAB,recon_LAB,[1 1 1]);
@@ -133,8 +135,9 @@ illuminant_gw1 = illumpca(imd, 3.5);
 % this is the illumination returned by white balancing the black/white
 % zoneplate. Better whould be to use the Macbeth color chart...
 illum = [0.817034824735336,0.573905664424434,0.055555229378056];
+illum_color = [0.804595476419120;0.590353673364318;0.064098827377311];
 
-imd_adapt = chromadapt(imd, illum, 'ColorSpace', 'linear-rgb');
+imd_adapt = chromadapt(imd, illum_color, 'ColorSpace', 'linear-rgb');
 
 imd_adapt_sRGB = lin2rgb(imd_adapt);
 imd_adapt_sRGB = imd_adapt_sRGB;
@@ -199,7 +202,7 @@ imshow(imd_adapt_sRGB_scaled.*b);
 xlabel('Contrast Enhanced blue (S)');
 subplot(3, 4, 12);
 imshow(imd_adapt_sRGB_scaled);
-xlabel('Contrast Enhanced blue (S)');
+xlabel('Contrast Enhanced Image');
 
 %% finally, get S-CIELAB difference for the processed image too
 
@@ -217,11 +220,13 @@ subplot(2, 2, 2);
 imshow(imd_adapt_sRGB_scaled);
 xlabel('Recons.');
 subplot(2, 2, 3);
-imshow(dE_LAB, [min(dE_LAB(:)), max(dE_LAB(:))]);
+imshow(dE_LAB, [0, max(dE_LAB(:))]);
 xlabel(['Delta E. LAB.', 'Max: ', num2str(max(dE_LAB(:)))]);
+colorbar
 subplot(2, 2, 4);
-imshow(dE_SLAB, [min(dE_SLAB(:)), max(dE_SLAB(:))]);
+imshow(dE_SLAB, [0, max(dE_SLAB(:))]);
 xlabel(['Delta E. S-LAB.', 'Max: ', num2str(max(dE_SLAB(:)))]);
+colorbar
 
 %%
 
