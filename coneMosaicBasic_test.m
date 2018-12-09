@@ -90,7 +90,7 @@ s_abs = im(:,:,3);
 % Weight the different channels, see what happens there 
 % Show different channels individually 
 
-%% Get Delta E between recnostructed and original image
+%% Get Delta E between reconstructed and original image
 disp('Getting Delta E between the images');
 [n, n, m] = size(imd);
 scale_down = n / spoke_size;

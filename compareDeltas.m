@@ -9,10 +9,10 @@ ieInit;
 
 disp('Setting up Scene...');
 % create spoke
-col1 = [1, 1, 0];
+col1 = [1, 0, 0];
 col2 = [0, 0, 1];
 spoke_size = 512;
-spoke = createSpoke(col1, col2, 10, spoke_size);
+spoke = createSpoke(col1, col2, 25, spoke_size);
 
 
 %% Modify original scene

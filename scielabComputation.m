@@ -5,7 +5,7 @@ close all
 %% read in image
 blur = 'gauss'; % 'gauss' or 'lpf' % LPF doesn't work yet. WIP
 
-img = createSpoke([1, 1, 0], [0, 0, 1], 25, 256);
+img = createSpoke([1, 1, 0], [0, 0, 1], 64, 256);
 
 if strcmp(blur, 'gauss')
     img_blur = imgaussfilt(img, 1);
