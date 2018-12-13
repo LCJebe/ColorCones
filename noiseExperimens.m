@@ -59,6 +59,7 @@ hold all
 stem(snr_macbeth_rgb(:, 2), 'g', 'filled');
 stem(snr_macbeth_rgb(:, 3), 'b', 'filled');
 xticks(1:24);
+ylim([0, 140]);
 grid;
 title('SNR');
 
@@ -85,28 +86,29 @@ end
 figure('units','normalized','outerposition',[0.1 0.1 0.7 0.5]);
 stem(avgError, 'k', 'filled');
 xticks(1:24);
+ylim([0, 30]);
 grid;
 title(['Average Delta E (CIELAB), WhitePoint ', mat2str(whiteRGB)]);
 
 
-%% save stuff
-rootdir = 'NoiseExperiments/';
-ex_name = 'Normal_Reconstruction_White1';
-exdir = strcat(rootdir, ex_name, '/');
-mkdir(exdir);
-
-
-saveas(figure(3), strcat(exdir, 'rec1.jpg'));
-saveas(figure(4), strcat(exdir, 'rec2.jpg'));
-saveas(figure(5), strcat(exdir, 'rec1box.jpg'));
-saveas(figure(6), strcat(exdir, 'rec2box.jpg'));
-
-saveas(figure(8), strcat(exdir, 'mse.jpg'));
-saveas(figure(8), strcat(exdir, 'mse.fig'));
-saveas(figure(9), strcat(exdir, 'snr.jpg'));
-saveas(figure(9), strcat(exdir, 'snr.fig'));
-saveas(figure(10), strcat(exdir, 'deltaE.jpg'));
-saveas(figure(10), strcat(exdir, 'deltaE.fig'));
+% %% save stuff
+% rootdir = 'NoiseExperiments/';
+% ex_name = 'Balanced_Reconstruction';
+% exdir = strcat(rootdir, ex_name, '/');
+% mkdir(exdir);
+% 
+% 
+% saveas(figure(3), strcat(exdir, 'rec1.jpg'));
+% saveas(figure(4), strcat(exdir, 'rec2.jpg'));
+% saveas(figure(5), strcat(exdir, 'rec1box.jpg'));
+% saveas(figure(6), strcat(exdir, 'rec2box.jpg'));
+% 
+% saveas(figure(8), strcat(exdir, 'mse.jpg'));
+% saveas(figure(8), strcat(exdir, 'mse.fig'));
+% saveas(figure(9), strcat(exdir, 'snr.jpg'));
+% saveas(figure(9), strcat(exdir, 'snr.fig'));
+% saveas(figure(10), strcat(exdir, 'deltaE.jpg'));
+% saveas(figure(10), strcat(exdir, 'deltaE.fig'));
 
 
 %% Find delta E between reconstructed images (in RGB)
@@ -267,7 +269,7 @@ function rgb = reconstructImage(cMosaic, WHITE_BALANCE)
         % square 19 is reference white
         whiteRGB = squares{19};
         whiteRGB = reshape(whiteRGB, [], 3);
-        avgWhiteRGB = mean(whiteRGB, 1);
+        avgWhiteRGB = mean(whiteRGB, 1)
         factorRGB  = [1, 1, 1] ./ avgWhiteRGB;
         
         % apply
@@ -310,7 +312,7 @@ function [s, cMosaic] = createMacbethScene(fov)
     %disp(sceneGet(s,'fov'));
 
     %% Set integration time 
-    cMosaic.integrationTime = 0.05;
+    cMosaic.integrationTime = 1000.00;
 
     %% Generate a sequence of 100 eye posistions.
     % cMosaic.emGenSequence(100);

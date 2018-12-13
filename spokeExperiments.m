@@ -81,7 +81,6 @@ exps{10}.col4 = exps{10}.col1;
 
 %% define white balance (estimated with whitePointCheck script)
 whiteRGB_1 = [0.9671, 0.8751, 0.1795];
-whiteRGB_2 = [1, 1, 1]; 
 
 %% run select an experiment number and run this experiment
 for ex = 1:10
@@ -93,70 +92,49 @@ for ex = 1:10
     [s1, cMosaic1, spoke1] = createSpokeScene(exp.col1, exp.col2, exp.spoke_size, exp.n_rings, fov);
     [s2, cMosaic2, spoke2] = createSpokeScene(exp.col3, exp.col4, exp.spoke_size, exp.n_rings, fov);
 
-    rec1 = reconstructImage(cMosaic1, whiteRGB_2);
-    rec2 = reconstructImage(cMosaic2, whiteRGB_2);
+    rec1 = reconstructImage(cMosaic1, [1, 1, 1]);
+    rec2 = reconstructImage(cMosaic2, [1, 1, 1]);
 
     % get CIELAB difference for the two reconstructed images
     dE_white1 = getDeltaE_CIELAB(rec1, rec2, whiteRGB_1);
-    dE_white2 = getDeltaE_CIELAB(rec1, rec2, whiteRGB_2);
 
     % perform white balancing and get delta E again
     rec1_bal = whiteBalance(rec1, whiteRGB_1);
-    rec2_bal = whiteBalance(rec2, whiteRGB_1);
-
-    % get CIELAB difference for the two reconstructed images again
-    dE_bal_white2 = getDeltaE_CIELAB(rec1_bal, rec2_bal, whiteRGB_2);
-
 
     % Now we have three different delta E. Still missing: Scene S-CIELAB!!!
     fov = sceneGet(s1, 'horizontal fov'); % in degree
     sampPerDeg = sceneGet(s1, 'cols') / fov;
-    dE_SLAB = getDeltaE_SLAB(spoke1, spoke2, whiteRGB_2, sampPerDeg);
+    dE_SLAB = getDeltaE_SLAB(spoke1, spoke2, whiteRGB_1, sampPerDeg);
 
     %% Plot the two spokes and the four reconstructed images
 
     f1 = figure('units','normalized','outerposition',[0 0 1 1]);
-    subplot(2, 3, 1);
+    subplot(2, 2, 1);
     imshow(spoke1);
     title('Input Spokes');
-    subplot(2, 3, 2);
+    subplot(2, 2, 2);
     imshow(spoke2);
-    subplot(2, 3, 3);
+    subplot(2, 2, 3);
     imshow(rec1);
     title('Reconstruction')
-    subplot(2, 3, 4);
+    subplot(2, 2, 4);
     imshow(rec2);
-    subplot(2, 3, 5);
-    imshow(rec1_bal);
-    title('Balanced Rec.');
-    subplot(2, 3, 6);
-    imshow(rec2_bal);
 
     %% new figure: plot the four differences
 
     % find out maximum first
-    maximum = max([max(dE_SLAB(:)), max(dE_white1(:)), max(dE_white2(:)), max(dE_bal_white2(:))]);
+    maximum = max([max(dE_SLAB(:)), max(dE_white1(:))]);
 
     f2 = figure('units','normalized','outerposition',[0 0 1 1]);
-    subplot(2, 3, 2);
+    subplot(1, 2, 1);
     imshow(dE_SLAB, [0, maximum]);
     title('S-CIELAB (Scenes)');
     xlabel(['Mean: ', num2str(mean(dE_SLAB(:)))]);
     colorbar;
-    subplot(2, 3, 4);
+    subplot(1, 2, 2);
     imshow(dE_white1, [0, maximum]);
-    title(['WP: ', mat2str(whiteRGB_1)]);
+    title(['CIELAB (Cones)']);
     xlabel(['Mean: ', num2str(mean(dE_white1(:)))]);
-    colorbar;
-    subplot(2, 3, 5);
-    imshow(dE_white2, [0, maximum]);
-    title(['WP: ', mat2str(whiteRGB_2)]);
-    xlabel(['Mean: ', num2str(mean(dE_white2(:)))]);
-    colorbar;
-    subplot(2, 3, 6);
-    imshow(dE_bal_white2, [0, maximum]);
-    title('Balanced dE');
-    xlabel(['Mean: ', num2str(mean(dE_bal_white2(:)))]);
     colorbar;
 
 
@@ -165,10 +143,10 @@ for ex = 1:10
     savedir = 'SpokeExperiments/';
     expdir = strcat(savedir, exp.name, '/');
     mkdir(expdir);
-    saveas(f1, strcat(expdir, 'images.jpg'));
-    saveas(f1, strcat(expdir, 'images.fig'));
-    saveas(f2, strcat(expdir, 'erorrs.jpg'));
-    saveas(f2, strcat(expdir, 'errors.fig'));
+    saveas(f1, strcat(expdir, 'v2_images.jpg'));
+    saveas(f1, strcat(expdir, 'v2_images.fig'));
+    saveas(f2, strcat(expdir, 'v2_erorrs.jpg'));
+   saveas(f2, strcat(expdir, 'v2_errors.fig'));
 end
 
 %% scales each color channel by a factor
@@ -246,7 +224,7 @@ function [s, cMosaic, spoke] = createSpokeScene(col1, col2, spoke_size, n_rings,
     %disp(sceneGet(s,'fov'));
 
     %% Set integration time 
-    cMosaic.integrationTime = 0.05;
+    cMosaic.integrationTime = 1000.0;
 
     %% Generate a sequence of 100 eye posistions.
     % cMosaic.emGenSequence(100);
